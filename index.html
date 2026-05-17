@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>وينه | Wyneh</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#090909;
+  --bg2:#121212;
+  --card:#171717;
+  --border:#2b2b2b;
+
+  --gold:#d4af37;
+  --gold2:#f0cf67;
+
+  --text:#f5f1df;
+  --muted:#9e9470;
+
+  --green:#22c55e;
+  --red:#ef4444;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Tajawal',sans-serif;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  max-width:430px;
+  margin:auto;
+  overflow-x:hidden;
+}
+
+.screen{
+  display:none;
+  min-height:100vh;
+}
+
+.screen.active{
+  display:block;
+}
+
+.top-header{
+  padding:55px 20px 20px;
+  background:linear-gradient(to bottom,#141414,#101010);
+  border-bottom:1px solid rgba(212,175,55,.2);
+}
+
+.logo{
+  font-size:38px;
+  font-weight:900;
+  background:linear-gradient(
+  45deg,
+  var(--gold2),
+  var(--gold)
+  );
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.location{
+  margin-top:8px;
+  color:var(--muted);
+}
+
+.search-box{
+  margin-top:18px;
+  display:flex;
+  gap:10px;
+}
+
+.search-input{
+  flex:1;
+  border:none;
+  outline:none;
+  background:var(--card);
+  border:1px solid var(--border);
+  padding:14px;
+  border-radius:16px;
+  color:white;
+  font-size:15px;
+}
+
+.search-btn{
+  border:none;
+  border-radius:16px;
+  width:55px;
+  background:linear-gradient(
+  45deg,
+  var(--gold2),
+  var(--gold)
+  );
+  font-size:20px;
+  cursor:pointer;
+}
+
+.section{
+  padding:18px;
+}
+
+.section-title{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:14px;
+}
+
+.categories{
+  display:flex;
+  gap:10px;
+  overflow:auto;
+}
+
+.categories::-webkit-scrollbar{
+  display:none;
+}
+
+.category{
+  background:var(--card);
+  border:1px solid var(--border);
+  padding:12px;
+  border-radius:18px;
+  min-width:80px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.category.active{
+  border:1px solid var(--gold);
+}
+
+.store-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  margin-bottom:12px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.store-card:hover{
+  transform:translateY(-3px);
+}
+
+.store-icon{
+  width:70px;
+  height:70px;
+  border-radius:18px;
+  background:#1f1f1f;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+}
+
+.store-info{
+  flex:1;
+  padding-right:14px;
+}
+
+.store-name{
+  font-weight:800;
+  font-size:17px;
+}
+
+.store-meta{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.badge{
+  display:inline-block;
+  margin-top:8px;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.open{
+  background:rgba(34,197,94,.1);
+  color:var(--green);
+}
+
+.closed{
+  background:rgba(239,68,68,.1);
+  color:var(--red);
+}
+
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  max-width:430px;
+  background:#111;
+  border-top:1px solid #222;
+  display:flex;
+  justify-content:space-around;
+  padding:15px 0;
+}
+
+.nav-btn{
+  text-align:center;
+  color:var(--muted);
+  cursor:pointer;
+}
+
+.nav-btn.active{
+  color:var(--gold);
+}
+</style>
+</head>
+
+<body>
+
+<div id="home" class="screen active">
+
+<div class="top-header">
+
+<div class="logo">
+وينه
+</div>
+
+<div class="location" id="userLocation">
+📍 جاري تحديد موقعك...
+</div>
+
+<div class="search-box">
+
+<input
+class="search-input"
+id="searchInput"
+placeholder="ابحث عن محل أو منتج..."
+>
+
+<button class="search-btn">
+🔍
+</button>
+
+</div>
+</div>
+
+<div class="section">
+
+<div class="section-title">
+الفئات
+</div>
+
+<div class="categories">
+
+<div class="category active">
+🏪<br>الكل
+</div>
+
+<div class="category">
+☕<br>كافيه
+</div>
+
+<div class="category">
+🍔<br>مطاعم
+</div>
+
+<div class="category">
+💊<br>صيدلية
+</div>
+
+<div class="category">
+📱<br>إلكترونيات
+</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+قريب منك الآن
+</div>
+
+<div id="storeList">
+</div>
+
+</div>
+
+</div>
+<div class="bottom-nav">
+
+<div class="nav-btn active">
+🏠<br>الرئيسية
+</div>
+
+<div class="nav-btn">
+⚖️<br>مقارنة
+</div>
+
+<div class="nav-btn">
+❤️<br>المفضلة
+</div>
+
+<div class="nav-btn">
+👤<br>حسابي
+</div>
+
+</div>
+
+<script>
+
+const stores = [
+{
+id:1,
+icon:"☕",
+name:"Star Coffee",
+type:"كافيه",
+distance:"0.5 كم",
+open:true,
+phone:"44001122",
+lat:25.2854,
+lng:51.5310
+},
+{
+id:2,
+icon:"🍔",
+name:"برجر الخليج",
+type:"مطاعم",
+distance:"1.1 كم",
+open:false,
+phone:"44009911",
+lat:25.2900,
+lng:51.5200
+},
+{
+id:3,
+icon:"💊",
+name:"صيدلية الشفاء",
+type:"صيدلية",
+distance:"0.9 كم",
+open:true,
+phone:"44007755",
+lat:25.2810,
+lng:51.5260
+},
+{
+id:4,
+icon:"📱",
+name:"Tech Store",
+type:"إلكترونيات",
+distance:"2.0 كم",
+open:true,
+phone:"44008866",
+lat:25.2700,
+lng:51.5100
+}
+];
+
+function renderStores(data){
+
+const storeList =
+document.getElementById("storeList");
+
+storeList.innerHTML =
+data.map(store => `
+
+<div class="store-card"
+onclick="openStore(${store.id})">
+
+<div class="store-icon">
+${store.icon}
+</div>
+
+<div class="store-info">
+
+<div class="store-name">
+${store.name}
+</div>
+
+<div class="store-meta">
+${store.type} · 📍 ${store.distance}
+</div>
+
+<div class="
+badge
+${store.open ? "open" : "closed"}
+">
+
+${store.open
+? "🟢 مفتوح الآن"
+: "🔴 مغلق الآن"}
+
+</div>
+
+</div>
+
+</div>
+
+`).join("");
+
+}
+
+renderStores(stores);
+
+function openStore(id){
+
+const store =
+stores.find(s => s.id === id);
+
+const action =
+confirm(
+`${store.name}
+
+اضغط موافق لفتح الخرائط
+أو إلغاء للاتصال`
+);
+
+if(action){
+
+window.open(
+`https://maps.google.com/?q=${store.lat},${store.lng}`,
+"_blank"
+);
+
+}else{
+
+window.location.href =
+`tel:${store.phone}`;
+
+}
+
+}
+
+document
+.getElementById("searchInput")
+.addEventListener("input",(e)=>{
+
+const value =
+e.target.value.toLowerCase();
+
+const filtered =
+stores.filter(store=>
+
+store.name
+.toLowerCase()
+.includes(value)
+
+||
+
+store.type
+.includes(value)
+
+);
+
+renderStores(filtered);
+
+});
+
+function getLocation(){
+
+if(navigator.geolocation){
+
+navigator.geolocation
+.getCurrentPosition(
+
+(position)=>{
+
+document
+.getElementById(
+"userLocation"
+)
+.innerHTML =
+"📍 موقعك الحالي";
+
+},
+
+()=>{
+
+document
+.getElementById(
+"userLocation"
+)
+.innerHTML =
+"📍 تعذر تحديد الموقع";
+
+}
+
+);
+
+}
+
+}
+
+getLocation();
+
+</script>
+
+</body>
+</html>
