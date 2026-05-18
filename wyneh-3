@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>وينه — اكتشف المحلات حولك</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
+  --secondary: #06b6d4;
+  --secondary-light: #22d3ee;
+  --bg: #f8fafc;
+  --bg-dark: #f1f5f9;
+  --white: #ffffff;
+  --surface: #ffffff;
+  --surface-hover: #f8fafc;
+  --text: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --info: #06b6d4;
+  --shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+  --shadow-lg: 0 12px 32px rgba(99, 102, 241, 0.15);
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  background: var(--bg);
+  font-family: 'Tajawal', 'Poppins', sans-serif;
+  color: var(--text);
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.screen { display:none; min-height:100vh; flex-direction:column; }
+.screen.active { display:flex; }
+
+/* SPLASH */
+#splash {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 50%, var(--secondary) 100%);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+#splash::before {
+  content:'';
+  position:absolute;
+  width:600px; height:600px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  top:-200px; right:-150px;
+  animation: floatA 8s ease-in-out infinite;
+}
+
+@keyframes floatA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-30px)} }
+
+.splash-inner { position:relative; z-index:2; animation:fadeUp 0.8s ease; padding:0 28px; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:translateY(0)} }
+
+.logo-ring {
+  width:120px; height:120px; border-radius:50%;
+  border:2px solid rgba(255,255,255,0.3);
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 32px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  animation: pulseRing 3s ease-in-out infinite;
+}
+
+@keyframes pulseRing {
+  0%,100%{ box-shadow:0 8px 32px rgba(0,0,0,0.2); }
+  50%{ box-shadow:0 8px 32px rgba(0,0,0,0.3), 0 0 0 16px rgba(255,255,255,0.1); }
+}
+
+.logo-ring-inner {
+  width:96px; height:96px; border-radius:50%;
+  background: rgba(255,255,255,0.15);
+  display:flex; align-items:center; justify-content:center;
+  font-size:44px;
+  border:1px solid rgba(255,255,255,0.2);
+}
+
+.splash-wordmark {
+  font-size:68px; font-weight:900; letter-spacing:-2px; margin-bottom:6px;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+}
+
+.splash-tagline {
+  color: rgba(255,255,255,0.85);
+  font-size:15px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:48px;
+  font-weight:600;
+}
+
+.splash-btn {
+  background: #ffffff;
+  color: var(--primary);
+  border: none;
+  padding: 16px 52px;
+  border-radius: 50px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+  transition: all 0.3s;
+}
+
+.splash-btn:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.3); }
+
+/* HEADER */
+.top-header {
+  background: var(--white);
+  padding: 50px 20px 22px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.header-greeting {
+  color: var(--text-secondary);
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.header-location {
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.notif-btn {
+  width: 40px;
+  height: 40px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border-light);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.notif-btn:hover {
+  background: var(--white);
+  border-color: var(--primary-light);
+  color: var(--primary);
+}
+
+.notif-dot {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  width: 8px;
+  height: 8px;
+  background: var(--danger);
+  border-radius: 50%;
+  animation: blink 2s infinite;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+.search-bar {
+  display: flex;
+  gap: 9px;
+}
+
+.search-input {
+  flex: 1;
+  background: var(--bg-dark);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 13px 16px;
+  color: var(--text);
+  font-family: 'Tajawal';
+  font-size: 15px;
+  transition: all 0.2s;
+}
+
+.search-input::placeholder { color: var(--text-muted); }
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.search-go {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border: none;
+  border-radius: 14px;
+  padding: 0 17px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #ffffff;
+  font-weight: 900;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.search-go:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+}
+
+.section { padding: 20px 18px 0; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.section-title { font-size: 17px; font-weight: 800; color: var(--text); font-family: 'Poppins', sans-serif; }
+
+.sort-btns {
+  display: flex;
+  gap: 8px;
+  padding: 0 18px 16px;
+  overflow-x: auto;
+}
+
+.sort-btns::-webkit-scrollbar { display: none; }
+
+.sort-btn {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.sort-btn:hover { border-color: var(--primary-light); color: var(--primary); }
+.sort-btn.active {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(6,182,212,0.05));
+  color: var(--primary);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.12);
+}
+
+.cats {
+  display: flex;
+  gap: 9px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.cats::-webkit-scrollbar { display: none; }
+
+.cat {
+  flex-shrink: 0;
+  min-width: 76px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.22s;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.cat:hover { border-color: var(--primary-light); transform: translateY(-2px); }
+.cat.active {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(6,182,212,0.08));
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+}
+
+.cat-icon { font-size: 24px; margin-bottom: 4px; }
+.cat-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.cat.active .cat-name { color: var(--primary); font-weight: 800; }
+
+.map-placeholder {
+  background: linear-gradient(135deg, #f0f4ff, #f0fdf4);
+  border-radius: 20px;
+  height: 150px;
+  margin: 18px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.map-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.map-pin-wrap { position: relative; z-index: 2; text-align: center; }
+.map-pin {
+  font-size: 46px;
+  display: block;
+  animation: bounce 2.5s ease-in-out infinite;
+  filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.3));
+}
+
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+
+.store-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.22s;
+  border: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.store-card:hover {
+  border-color: var(--primary-light);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.12);
+}
+
+.store-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(6,182,212,0.08));
+  border: 1px solid var(--border);
+}
+
+.store-info { flex: 1; }
+
+.store-name {
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 2px;
+  color: var(--text);
+  font-family: 'Poppins', sans-serif;
+}
+
+.store-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.store-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.badge.open { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+.badge.closed { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+.bdot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+.store-rating-row { display: flex; align-items: center; gap: 6px; }
+
+.star-badge {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.stars { letter-spacing: -2px; }
+.star-badge .score { color: var(--warning); font-family: 'Poppins', sans-serif; }
+.store-reviews { font-size: 10px; color: var(--text-muted); }
+
+.store-arrow {
+  color: var(--text-muted);
+  font-size: 20px;
+}
+
+.bottom-nav {
+  position: sticky;
+  bottom: 0;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding: 10px 0 22px;
+  z-index: 100;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: all 0.2s;
+}
+
+.nav-icon { font-size: 22px; transition: all 0.2s; }
+.nav-label { font-size: 10px; font-weight: 700; color: var(--text-muted); transition: color 0.2s; }
+
+.nav-item.active .nav-label { color: var(--primary); font-weight: 800; }
+.nav-item.active .nav-icon { transform: scale(1.15); filter: drop-shadow(0 2px 6px rgba(99, 102, 241, 0.3)); }
+
+#detail { background: var(--bg); }
+
+.detail-header {
+  background: var(--white);
+  padding: 50px 20px 22px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.back-btn {
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  transition: all 0.2s;
+}
+
+.back-btn:hover {
+  border-color: var(--primary-light);
+  color: var(--primary);
+  background: var(--white);
+}
+
+.det-icon { font-size: 52px; margin-bottom: 12px; filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.2)); }
+.det-name { font-size: 24px; font-weight: 900; color: var(--text); margin-bottom: 4px; font-family: 'Poppins', sans-serif; }
+.det-cat { color: var(--text-secondary); font-size: 12px; margin-bottom: 12px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+.det-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+.rating-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin: 18px 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.rating-main {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.rating-score {
+  font-size: 52px;
+  font-weight: 900;
+  color: var(--warning);
+  font-family: 'Poppins', sans-serif;
+}
+
+.rating-stars { font-size: 14px; letter-spacing: -1px; margin-bottom: 4px; }
+.rating-reviews { font-size: 12px; color: var(--text-secondary); }
+.rating-count { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+.add-review-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border: none;
+  border-radius: 12px;
+  padding: 10px;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 12px;
+  font-family: 'Tajawal';
+  font-size: 13px;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.add-review-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+}
+
+.rating-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.rating-bar { display: flex; align-items: center; gap: 8px; }
+.rating-bar-num { font-size: 11px; color: var(--text-muted); width: 14px; text-align: center; font-weight: 700; }
+.rating-bar-track { flex: 1; height: 6px; background: var(--border-light); border-radius: 3px; overflow: hidden; }
+.rating-bar-fill { height: 100%; background: linear-gradient(90deg, var(--warning), var(--primary-light)); border-radius: 3px; }
+.rating-bar-count { font-size: 10px; color: var(--text-muted); width: 24px; text-align: right; }
+
+.info-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 18px;
+}
+
+.info-card {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.info-card-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.info-card-value {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  font-family: 'Poppins', sans-serif;
+}
+
+.info-card-value.primary {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.call-btn {
+  margin: 0 16px 16px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  width: calc(100% - 32px);
+  font-family: 'Tajawal';
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.25);
+}
+
+.call-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(99, 102, 241, 0.35);
+}
+
+.reviews-section { padding: 0 18px 16px; }
+.reviews-header { font-size: 15px; font-weight: 800; margin-bottom: 14px; font-family: 'Poppins', sans-serif; }
+
+.review-item {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.review-user { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.review-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.review-date { font-size: 10px; color: var(--text-muted); }
+.review-rating { font-size: 12px; color: var(--warning); margin-bottom: 6px; letter-spacing: -1px; }
+.review-text { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+
+.fade-in { animation: fadeUp 0.3s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+.location-badge {
+  font-size: 11px;
+  background: rgba(6, 182, 212, 0.1);
+  color: var(--secondary);
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-weight: 700;
+  display: inline-block;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ SPLASH ══════════ -->
+<div class="screen active" id="splash">
+  <div class="splash-inner">
+    <div class="logo-ring">
+      <div class="logo-ring-inner">📍</div>
+    </div>
+    <div class="splash-wordmark">وينه</div>
+    <div class="splash-tagline">اكتشف · قارن · وفّر</div>
+    <button class="splash-btn" onclick="goTo('home')">ابدأ الآن ←</button>
+  </div>
+</div>
+
+<!-- ══════════ HOME ══════════ -->
+<div class="screen" id="home">
+  <div class="top-header">
+    <div class="header-top">
+      <div>
+        <div class="header-greeting">مرحباً بك</div>
+        <div class="header-location">وينة 🎉</div>
+      </div>
+      <button class="notif-btn">🔔<span class="notif-dot"></span></button>
+    </div>
+    <div class="search-bar">
+      <input class="search-input" placeholder="🔍 ابحث عن محل..." id="searchInput" oninput="handleSearch(this.value)">
+      <button class="search-go">⚡</button>
+    </div>
+  </div>
+
+  <div class="sort-btns">
+    <button class="sort-btn active" onclick="setSortHome(this,'rating')">⭐ الأعلى تقييماً</button>
+    <button class="sort-btn" onclick="setSortHome(this,'distance')">📍 الأقرب</button>
+  </div>
+
+  <div class="section" style="margin-top:14px">
+    <div class="section-header"><div class="section-title">المنطقة</div></div>
+    <div class="cats">
+      <div class="cat active" onclick="filterArea(this,'all')"><div class="cat-icon">🏘️</div><div class="cat-name">الكل</div></div>
+      <div class="cat" onclick="filterArea(this,'samayah')"><div class="cat-icon">🏪</div><div class="cat-name">سميسمة</div></div>
+      <div class="cat" onclick="filterArea(this,'umm-qarn')"><div class="cat-icon">🏬</div><div class="cat-name">أم قرن</div></div>
+      <div class="cat" onclick="filterArea(this,'al-khor')"><div class="cat-icon">🏢</div><div class="cat-name">الخور</div></div>
+    </div>
+  </div>
+
+  <div class="map-placeholder">
+    <div class="map-grid"></div>
+    <div class="map-pin-wrap">
+      <span class="map-pin">📍</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">المحلات</div>
+    </div>
+    <div id="storeList"></div>
+  </div>
+
+  <div style="height:90px"></div>
+
+  <div class="bottom-nav">
+    <div class="nav-item active"><div class="nav-icon">🏠</div><div class="nav-label">الرئيسية</div></div>
+    <div class="nav-item"><div class="nav-icon">⭐</div><div class="nav-label">الأفضل</div></div>
+    <div class="nav-item"><div class="nav-icon">❤️</div><div class="nav-label">المفضلة</div></div>
+    <div class="nav-item"><div class="nav-icon">👤</div><div class="nav-label">حسابي</div></div>
+  </div>
+</div>
+
+<!-- ══════════ DETAIL ══════════ -->
+<div class="screen" id="detail">
+  <div class="detail-header">
+    <button class="back-btn" onclick="goTo('home')">←</button>
+    <div class="det-icon" id="detIcon">🏪</div>
+    <div class="det-name" id="detName">--</div>
+    <div class="det-cat"  id="detCat">--</div>
+    <div class="det-meta">
+      <span class="badge open" id="detStatus">--</span>
+      <span class="location-badge" id="detArea">--</span>
+    </div>
+  </div>
+
+  <div class="rating-card">
+    <div class="rating-main">
+      <div>
+        <div class="rating-score" id="detRatingScore">4.7</div>
+        <div class="rating-stars" id="detRatingStars">⭐⭐⭐⭐⭐</div>
+        <div class="rating-reviews" id="detRatingCount">من 234 تقييم</div>
+        <button class="add-review-btn" onclick="addReview()">+ أضف تقييمك</button>
+      </div>
+      <div style="flex:1">
+        <div class="rating-bars" id="ratingBars"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-cards">
+    <div class="info-card">
+      <div class="info-card-label">رقم الهاتف</div>
+      <div class="info-card-value" id="detPhone" style="font-size:14px;color:var(--primary)">--</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">التقييم</div>
+      <div class="info-card-value primary" id="detRating">--</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">ساعات العمل</div>
+      <div class="info-card-value" id="detWork" style="font-size:13px">--</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">النوع</div>
+      <div class="info-card-value" id="detType" style="font-size:13px">--</div>
+    </div>
+  </div>
+
+  <button class="call-btn" id="callBtn" onclick="callStore()">📞 اتصل الآن</button>
+
+  <div class="reviews-section">
+    <div class="reviews-header">⭐ أراء الزبائن</div>
+    <div id="reviewsList"></div>
+  </div>
+
+  <div style="height:20px"></div>
+</div>
+
+<script>
+const stores = [
+  // سميسمة - SAMAYAH
+  {id:1,icon:'🛒',name:'محل الكبير للبقالة',type:'بقالة',area:'سميسمة',areaCode:'samayah',phone:'44234567',hours:'6ص–12م',rating:4.8,reviews:245,workHours:'6:00 ص - 12:00 م',ratingDist:{5:195,4:40,3:8,2:2,1:0}},
+  {id:2,icon:'☕',name:'كافيه النخيل',type:'كافيه',area:'سميسمة',areaCode:'samayah',phone:'44345678',hours:'7ص–11م',rating:4.6,reviews:178,workHours:'7:00 ص - 11:00 م',ratingDist:{5:130,4:40,3:6,2:2,1:0}},
+  {id:3,icon:'💊',name:'صيدلية الرويس',type:'صيدلية',area:'سميسمة',areaCode:'samayah',phone:'44456789',hours:'8ص–11م',rating:4.7,reviews:156,workHours:'8:00 ص - 11:00 م',ratingDist:{5:120,4:30,3:4,2:1,1:1}},
+  {id:4,icon:'🍔',name:'مطعم الزمن الجميل',type:'مطعم',area:'سميسمة',areaCode:'samayah',phone:'44567890',hours:'11ص–12م',rating:4.9,reviews:312,workHours:'11:00 ص - 12:00 ص',ratingDist:{5:280,4:28,3:3,2:1,1:0}},
+  {id:5,icon:'🧴',name:'متجر النظافة والعطور',type:'عطور و منظفات',area:'سميسمة',areaCode:'samayah',phone:'44678901',hours:'9ص–10م',rating:4.5,reviews:98,workHours:'9:00 ص - 10:00 م',ratingDist:{5:70,4:22,3:4,2:2,1:0}},
+
+  // أم قرن - UMM QARN
+  {id:6,icon:'🛒',name:'هايبر ماركت العايد',type:'بقالة',area:'أم قرن',areaCode:'umm-qarn',phone:'44123456',hours:'7ص–1ص',rating:4.7,reviews:289,workHours:'7:00 ص - 1:00 ص',ratingDist:{5:220,4:55,3:10,2:3,1:1}},
+  {id:7,icon:'☕',name:'مقهى الأصدقاء',type:'كافيه',area:'أم قرن',areaCode:'umm-qarn',phone:'44234567',hours:'8ص–12م',rating:4.4,reviews:134,workHours:'8:00 ص - 12:00 ص',ratingDist:{5:95,4:35,3:3,2:1,1:0}},
+  {id:8,icon:'🍕',name:'بيتزا الجودة',type:'مطعم',area:'أم قرن',areaCode:'umm-qarn',phone:'44345678',hours:'12ص–1ص',rating:4.6,reviews:201,workHours:'12:00 ص - 1:00 ص',ratingDist:{5:155,4:40,3:4,2:2,1:0}},
+  {id:9,icon:'💊',name:'صيدلية الصحة',type:'صيدلية',area:'أم قرن',areaCode:'umm-qarn',phone:'44456789',hours:'9ص–10م',rating:4.8,reviews:167,workHours:'9:00 ص - 10:00 م',ratingDist:{5:135,4:28,3:3,2:1,1:0}},
+  {id:10,icon:'👕',name:'متجر الملابس الحديثة',type:'ملابس',area:'أم قرن',areaCode:'umm-qarn',phone:'44567890',hours:'10ص–10م',rating:4.5,reviews:112,workHours:'10:00 ص - 10:00 م',ratingDist:{5:82,4:25,3:4,2:1,1:0}},
+
+  // الخور - AL KHOR
+  {id:11,icon:'🛒',name:'سوق الخور الحديث',type:'بقالة',area:'الخور',areaCode:'al-khor',phone:'44987654',hours:'6ص–12م',rating:4.6,reviews:223,workHours:'6:00 ص - 12:00 ص',ratingDist:{5:170,4:45,3:6,2:2,1:0}},
+  {id:12,icon:'☕',name:'كافيه البحر',type:'كافيه',area:'الخور',areaCode:'al-khor',phone:'44876543',hours:'7ص–11م',rating:4.7,reviews:145,workHours:'7:00 ص - 11:00 م',ratingDist:{5:110,4:32,3:2,2:1,1:0}},
+  {id:13,icon:'🍤',name:'مطعم الأسماك الطازة',type:'مطعم بحري',area:'الخور',areaCode:'al-khor',phone:'44765432',hours:'12ص–12م',rating:4.8,reviews:267,workHours:'12:00 ص - 12:00 ص',ratingDist:{5:215,4:45,3:5,2:2,1:0}},
+  {id:14,icon:'💊',name:'صيدلية الخور الكبرى',type:'صيدلية',area:'الخور',areaCode:'al-khor',phone:'44654321',hours:'8ص–10م',rating:4.5,reviews:189,workHours:'8:00 ص - 10:00 م',ratingDist:{5:140,4:40,3:6,2:2,1:1}},
+  {id:15,icon:'🏋️',name:'متجر الرياضة والاستجمام',type:'رياضة',area:'الخور',areaCode:'al-khor',phone:'44543210',hours:'9ص–9م',rating:4.4,reviews:76,workHours:'9:00 ص - 9:00 م',ratingDist:{5:55,4:18,3:2,2:1,1:0}},
+];
+
+const reviews = {
+  1:[
+    {user:'أم محمود',rating:5,text:'محل رائع والأسعار منطقية جداً'},
+    {user:'أحمد النعيمي',rating:5,text:'خدمة ممتازة والموظفين بشوش'},
+  ],
+  4:[
+    {user:'علي',rating:5,text:'أفضل مطعم في سميسمة الطعم لا يضاهى'},
+    {user:'فاطمة',rating:5,text:'النظافة والجودة على أعلى مستوى'},
+  ],
+  6:[
+    {user:'محمد الدوسري',rating:5,text:'أفضل أسعار في أم قرن'},
+    {user:'حنان',rating:4,text:'جيد لكن الزحام كتير بالأوقات الذروة'},
+  ],
+  13:[
+    {user:'سالم',rating:5,text:'الأسماك طازة جداً والطاهي ماهر'},
+    {user:'ليلى',rating:5,text:'تجربة رائعة وأسعار معقولة'},
+    {user:'جاسم',rating:5,text:'أفضل مطعم بحري في الخور'},
+  ],
+};
+
+let sortMode = 'rating';
+let currentArea = 'all';
+
+function renderStores(list) {
+  const sorted = list.sort((a,b) => {
+    if(sortMode==='rating') return b.rating-a.rating;
+    if(sortMode==='distance') return Math.random()-0.5;
+    return Math.random()-0.5;
+  });
+
+  document.getElementById('storeList').innerHTML = sorted.map(s => `
+    <div class="store-card fade-in" onclick="openDetail(${s.id})">
+      <div class="store-img">${s.icon}</div>
+      <div class="store-info">
+        <div class="store-name">${s.name}</div>
+        <div class="store-sub">${s.type} · ${s.area}</div>
+        <div class="store-meta">
+          <span class="badge open">📍 ${s.area}</span>
+          <span class="star-badge">
+            <span class="stars">⭐⭐⭐⭐⭐</span>
+            <span class="score">${s.rating}</span>
+          </span>
+        </div>
+      </div>
+      <div class="store-arrow">›</div>
+    </div>`).join('');
+}
+
+function setSortHome(el, mode) {
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  sortMode = mode;
+  renderStores(stores.filter(s => currentArea==='all'?true:s.areaCode===currentArea));
+}
+
+function filterArea(el, area) {
+  document.querySelectorAll('#home .cat').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  currentArea = area;
+  renderStores(area==='all' ? stores : stores.filter(s=>s.areaCode===area));
+}
+
+function handleSearch(v) {
+  if(!v){renderStores(stores);return;}
+  renderStores(stores.filter(s=>s.name.includes(v)||s.type.includes(v)||s.area.includes(v)));
+}
+
+function openDetail(id) {
+  const s = stores.find(x=>x.id===id);
+  document.getElementById('detIcon').textContent = s.icon;
+  document.getElementById('detName').textContent = s.name;
+  document.getElementById('detCat').textContent  = s.type;
+  document.getElementById('detArea').textContent = `📍 ${s.area}`;
+  document.getElementById('detPhone').textContent = s.phone;
+  document.getElementById('detWork').textContent = s.workHours;
+  document.getElementById('detType').textContent = s.type;
+  document.getElementById('detRating').textContent = '⭐ '+s.rating;
+
+  const st = document.getElementById('detStatus');
+  st.textContent = '🟢 مفتوح الآن';
+  st.className = 'badge open';
+
+  document.getElementById('detRatingScore').textContent = s.rating;
+  const stars = '⭐'.repeat(Math.round(s.rating)) + '☆'.repeat(5-Math.round(s.rating));
+  document.getElementById('detRatingStars').textContent = stars;
+  document.getElementById('detRatingCount').textContent = `من ${s.reviews} تقييم`;
+
+  const dist = s.ratingDist;
+  const total = Object.values(dist).reduce((a,b)=>a+b,0);
+  document.getElementById('ratingBars').innerHTML = [5,4,3,2,1].map(num => {
+    const pct = (dist[num]/total)*100;
+    return `<div class="rating-bar">
+      <div class="rating-bar-num">${num}⭐</div>
+      <div class="rating-bar-track"><div class="rating-bar-fill" style="width:${pct}%"></div></div>
+      <div class="rating-bar-count">${dist[num]}</div>
+    </div>`;
+  }).join('');
+
+  const storeReviews = reviews[id] || [];
+  document.getElementById('reviewsList').innerHTML = storeReviews.map(r => `
+    <div class="review-item">
+      <div class="review-user">
+        <div class="review-name">👤 ${r.user}</div>
+        <div class="review-date">قبل أسبوع</div>
+      </div>
+      <div class="review-rating">${'⭐'.repeat(r.rating)}</div>
+      <div class="review-text">"${r.text}"</div>
+    </div>`).join('') || '<div style="color:var(--text-muted);text-align:center;padding:20px">لا توجد تقييمات بعد</div>';
+
+  goTo('detail');
+}
+
+function callStore() {
+  const phone = document.getElementById('detPhone').textContent;
+  alert(`جاري الاتصال بـ ${phone}\n\nملاحظة: في التطبيق الحقيقي سيتم فتح تطبيق الهاتف`);
+}
+
+function addReview() {
+  alert('شكراً! في التطبيق الحقيقي يمكنك إضافة تقييمك هنا');
+}
+
+function goTo(screen) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(screen).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+renderStores(stores);
+</script>
+</body>
+</html>
